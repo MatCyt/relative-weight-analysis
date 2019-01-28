@@ -58,7 +58,7 @@ df_processed = df_processed %>%
 df_processed = df_processed %>%
   mutate(creative = sample(c("Creative1", "Creative2" , "Creative3"), size = nrow(df_initial), replace = T, prob = c(0.3, 0.4, 0.3)))
 
-# TODO Hash the cookie values
+# Hash the cookie values
 df_processed$cookie = substr(df_processed$cookie, 4, stop = 10000000)
 
 df_processed$cookie = gsub("0", "l", df_processed$cookie)
@@ -66,6 +66,6 @@ df_processed$cookie = gsub("9", "i", df_processed$cookie)
 
 head(df_processed)
 
-
+# TODO Print output structure
 
                 
