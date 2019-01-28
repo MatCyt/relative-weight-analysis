@@ -1,12 +1,10 @@
-# libraries ####
-library(yhat)
-library(relaimpo)
+## libraries ----
 library(dplyr)
 library(readr)
 library(data.table)
 library(kableExtra)
 
-# load data ####
+## load data ----
 
 # home
 df = fread("C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\sample_dataset_main.csv")
@@ -16,7 +14,7 @@ df = fread("C:\\Users\\mateusz.cytrowski\\Desktop\\MediaProject\\sample_dataset_
 
 
 
-# Create baseline dataset - input for both RWA and Markov ----
+## Create baseline dataset - input for both RWA and Markov ----
 # add relative columns, add variables, change names to hash original dataset
 
 prices = c(15, 20, 25)
@@ -66,6 +64,15 @@ df_processed$cookie = gsub("9", "i", df_processed$cookie)
 
 head(df_processed)
 
+## Save the preprocessed file ----
+
+# home
+write_csv(df_processed, "C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\processed_dataset.csv")
+
+# work
+write_csv(df_processed, "C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\processed_dataset.csv")
+
+
 # TODO Print output structure
 
-                
+# TODO save sample

@@ -1,4 +1,20 @@
-# input  ####
+# libraries
+library(readr)
+library(data.table)
+library(kableExtra)
+library(readr)
+
+## load datasets ----
+
+# home
+df_processed = fread("C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\processed_dataset.csv")
+
+# work
+df_processed = fread("C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\processed_dataset.csv")
+
+
+
+## Preprocess dataset for RWA format ----
 
 # delete not required dimension - because of dcast where I'cant "not include it" - any way around it?
 df_input = df_initial 
@@ -31,6 +47,9 @@ head(df_final) # final dataset
 
 test = head(df_final)
 
-test %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F)
+## Create the table to visualize the data format ----
+
+## Save the sample ----
+
+## Save the files ----
+
