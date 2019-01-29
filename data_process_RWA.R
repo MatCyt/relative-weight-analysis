@@ -10,16 +10,13 @@ library(readr)
 df_processed = fread("C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\processed_dataset.csv")
 
 # work
-df_processed = fread("C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\processed_dataset.csv")
+df_processed = fread("C:\\Users\\mateusz.cytrowski\\Desktop\\MediaProject\\processed_dataset_sample.csv")
 
 
 
 ## Preprocess dataset for RWA format ----
 
 # delete not required dimension - because of dcast where I'cant "not include it" - any way around it?
-df_input = df_initial 
-
-
 # because of dcast we need to separately group conversions and sales and dcast impressions per dimension (like channel)
 # and then join those two together. Dcast fucks up other variables in df like conversion and sales
 

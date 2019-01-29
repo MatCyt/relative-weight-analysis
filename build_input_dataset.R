@@ -54,7 +54,7 @@ df_processed = df_processed %>%
 
 # Create new dimension - creative
 df_processed = df_processed %>%
-  mutate(creative = sample(c("Creative1", "Creative2" , "Creative3"), size = nrow(df_initial), replace = T, prob = c(0.3, 0.4, 0.3)))
+  mutate(creative = sample(c("Creative1", "Creative2" , "Creative3"), size = nrow(df_processed), replace = T, prob = c(0.3, 0.4, 0.3)))
 
 # Hash the cookie values
 df_processed$cookie = substr(df_processed$cookie, 4, stop = 10000000)
@@ -70,9 +70,22 @@ head(df_processed)
 write_csv(df_processed, "C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\processed_dataset.csv")
 
 # work
-write_csv(df_processed, "C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\processed_dataset.csv")
+write_csv(df_processed, "C:\\Users\\mateusz.cytrowski\\Desktop\\MediaProject\\processed_dataset.csv")
 
 
-# TODO Print output structure
+# Print output structure
+df_processed_sample = df_processed[]
 
-# TODO save sample
+kable(df_processed_sample) %>%
+  kable_styling(bootstrap_options = c("striped"), full_width = F) %>%
+  row_spec(0, align = "center")
+
+
+# save sample
+df_processed_sample = head(df_processed, 50000)
+
+  # home
+  write_csv(df_processed_sample, "C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\processed_dataset_sample.csv")
+
+  # work
+  write_csv(df_processed_sample, "C:\\Users\\mateusz.cytrowski\\Desktop\\MediaProject\\processed_dataset_sample.csv")
