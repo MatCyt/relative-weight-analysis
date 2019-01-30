@@ -14,40 +14,86 @@ df_processed = fread("C:\\Users\\mateusz.cytrowski\\Desktop\\MediaProject\\proce
 
 
 
-## Preprocess dataset for RWA format ----
+### Preprocess dataset for RWA format ----
 
-str(df_processed)
-# delete not required dimension - because of dcast where I'cant "not include it" - any way around it?
-# because of dcast we need to separately group conversions and sales and dcast impressions per dimension (like channel)
-# and then join those two together. Dcast fucks up other variables in df like conversion and sales
-
-# 1) group input by cookie - sales sum and conversions sum
-df_inputgroup = df_input %>%
-  select(cookie, conversion, sales) %>%
-  group_by(cookie) %>%
-  summarise(conversion = sum(conversion),
-            sales = sum(sales))
-
-df_inputgroup = as.data.frame(df_inputgroup)
-
+dependent_variable = "conversion"
+impact_variable = "impression"
 selected_dimension = "channel"
 
-# 2) dcast dimension and aggregate impressions by sum 
-df_inputcast = df_input %>%
-  select(cookie, selected_dimension, impression)
-df_inputcast = dcast(df_inputcast, cookie ~ df_inputcast[,selected_dimension] ,fun.aggregate = sum)
+## Approach 1 - Full Data Grouped by Cookie ----
+# because of (current) dcast limitations I need to split datasets, process separately and join them
 
-# 3) join those two
-df_final = df_inputgroup %>%
-  full_join(df_inputcast, by = "cookie")
+# target variable sum by cookie
+df_input1_cookie = as.data.frame(df_processed %>%
+                            select(cookie, target_variable) %>%
+                            group_by(cookie) %>%
+                            summarise_all(sum))
 
-head(df_final) # final dataset
+# dcast independent variable
+df_input2_cookie = df_processed %>%
+  select(cookie, selected_dimension, impact_variable)
 
-test = head(df_final)
+df_input2_cookie = dcast(df_input2_cookie, paste("cookie ~", selected_dimension), value.var = impact_variable, fun.aggregate = sum)
 
-## Create the table to visualize the data format ----
+# join both input sources
+df_cookie = df_input1_cookie %>%
+  full_join(df_input2_cookie, by = "cookie")
 
-## Save the sample ----
+
+
+## Approach 2 - Aggregated data - grouped by day ----
+
+# target variable sum by day
+df_input1_day = as.data.frame(df_processed %>%
+                            select(time, target_variable) %>%
+                            mutate(day = as.Date(time)) %>%
+                            group_by(day) %>%
+                            select(-time) %>%
+                            summarise_all(sum))
+
+# dcast independent variable
+df_input2_day = df_processed %>%
+  select(time, selected_dimension, impact_variable) %>%
+  mutate(day = as.Date(time)) %>%
+  select(-time)
+
+df_input2_day = dcast(df_input2_day, paste("day ~", selected_dimension), value.var = impact_variable, fun.aggregate = sum)
+
+# join both input sources
+df_day = df_input1_day %>%
+  full_join(df_input2_day, by = "day")
+
+
+## Print output structure ----
+df_cookie_structure = head(df_cookie, 4)
+df_day_structure = head(df_day, 4)
+
+kable(df_cookie_structure) %>%
+  kable_styling(bootstrap_options = c("striped"), full_width = F) %>%
+  row_spec(0, align = "center")
+
+kable(df_day_structure) %>%
+  kable_styling(bootstrap_options = c("striped"), full_width = F) %>%
+  row_spec(0, align = "center")
+
+## Save the sample (cookie only) ----
+df_cookie_sample = head(df_processed, 50000)
+
+# home
+write_csv(df_cookie_sample, "C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\df_cookie_sample.csv")
+
+# work
+write_csv(df_cookie_sample, "C:\\Users\\mateusz.cytrowski\\Desktop\\MediaProject\\df_cookie_sample.csv")
+
 
 ## Save the files ----
 
+# home - cookie
+write_csv(df_cookie, "C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\df_cookie.csv")
+# work - cookie
+write_csv(df_cookie, "C:\\Users\\mateusz.cytrowski\\Desktop\\MediaProject\\df_cookie.csv")
+
+# home - day
+write_csv(df_day, "C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\df_day.csv")
+# work - day
+write_csv(df_day, "C:\\Users\\mateusz.cytrowski\\Desktop\\MediaProject\\df_day.csv")

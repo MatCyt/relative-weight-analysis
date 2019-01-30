@@ -74,9 +74,9 @@ write_csv(df_processed, "C:\\Users\\mateusz.cytrowski\\Desktop\\MediaProject\\pr
 
 
 # Print output structure
-df_processed_sample = df_processed[]
+df_processed_structure = head(df_processed)
 
-kable(df_processed_sample) %>%
+kable(df_processed_structure) %>%
   kable_styling(bootstrap_options = c("striped"), full_width = F) %>%
   row_spec(0, align = "center")
 
