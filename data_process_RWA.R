@@ -1,5 +1,5 @@
 # libraries
-library(readr)
+library(dplyr)
 library(data.table)
 library(kableExtra)
 library(readr)
@@ -23,9 +23,9 @@ selected_dimension = "channel"
 ## Approach 1 - Full Data Grouped by Cookie ----
 # because of (current) dcast limitations I need to split datasets, process separately and join them
 
-# target variable sum by cookie
+# dependent variable sum by cookie
 df_input1_cookie = as.data.frame(df_processed %>%
-                            select(cookie, target_variable) %>%
+                            select(cookie, dependent_variable) %>%
                             group_by(cookie) %>%
                             summarise_all(sum))
 
@@ -43,9 +43,9 @@ df_cookie = df_input1_cookie %>%
 
 ## Approach 2 - Aggregated data - grouped by day ----
 
-# target variable sum by day
+# dependent variable sum by day
 df_input1_day = as.data.frame(df_processed %>%
-                            select(time, target_variable) %>%
+                            select(time, dependent_variable) %>%
                             mutate(day = as.Date(time)) %>%
                             group_by(day) %>%
                             select(-time) %>%
@@ -76,7 +76,7 @@ kable(df_day_structure) %>%
   kable_styling(bootstrap_options = c("striped"), full_width = F) %>%
   row_spec(0, align = "center")
 
-## Save the sample (cookie only) ----
+## Save the sample (cookie only due to size) ----
 df_cookie_sample = head(df_processed, 50000)
 
 # home

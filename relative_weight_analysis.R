@@ -2,15 +2,25 @@
 library(relaimpo)
 library(yhat)
 library(dplyr)
+library(data.table)
 
 ## load data ----
 
 
+# home - cookie
+df_cookie = fread("C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\df_cookie.csv")
+# work - cookie
+df_cookie = fread("C:\\Users\\mateusz.cytrowski\\Desktop\\MediaProject\\df_cookie.csv")
+
+# home - day
+df_day = fread("C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\df_day.csv")
+# work - day
+df_day = fread("C:\\Users\\mateusz.cytrowski\\Desktop\\MediaProject\\df_day.csv")
 
 
 ## run Relative Weight Analysis (RWA) with realaimpo
 
-# cookie aggregation
+# RWA on cookie level
 df_cookie_input = df_cookie[, -1]
 
 model_cookie = lm(conversion ~ ., data = df_cookie_input)
@@ -18,7 +28,7 @@ model_cookie = lm(conversion ~ ., data = df_cookie_input)
 rel_cookie_lmg = calc.relimp(model_cookie, type = c("lmg"), rela = T)
 
 
-# day aggregation
+# RWA on day level
 df_day_input = df_day[, -1]
 
 model_day = lm(conversion ~ ., data = df_day_input)
