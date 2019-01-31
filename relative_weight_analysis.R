@@ -9,14 +9,21 @@ library(dplyr)
 
 
 ## run Relative Weight Analysis (RWA) with realaimpo
-df_final = df_final %>%
-  select(-conversion, -cookie)
 
-df_final$cookie = NULL
+# cookie aggregation
+df_cookie_input = df_cookie[, -1]
 
-model = lm(sales ~ ., data = df_final)
+model_cookie = lm(conversion ~ ., data = df_cookie_input)
 
-relweight_lmg = calc.relimp(model, type = c("lmg"), rela = T)
+rel_cookie_lmg = calc.relimp(model_cookie, type = c("lmg"), rela = T)
+
+
+# day aggregation
+df_day_input = df_day[, -1]
+
+model_day = lm(conversion ~ ., data = df_day_input)
+
+rel_day_lmg = calc.relimp(model_day, type = c("lmg"), rela = T)
 
 ## compare different RWA relaimpo versions
 
