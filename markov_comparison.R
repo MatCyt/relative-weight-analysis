@@ -1,6 +1,7 @@
 # libraries
 library(dplyr)
 library(ChannelAttribution)
+library(readr)
 
 # load dataset
 
@@ -46,19 +47,17 @@ heuristic_attribution <- heuristic_models(df_paths,
 
 ### Prepare final joint dataset ----
 
-# Join attribution results
-campaign_attribution = merge(markov_attribution$result, heuristic_attribution)
+# Join attribution results and markov removal effect 
+markov_heuristics_attribution = merge(markov_attribution$result, heuristic_attribution)
+
+markov_removal_effect = markov_attribution$removal_effects
 
 # Change the name of markov results column
-names(campaign_attribution)[names(campaign_attribution) == "total_conversions"] = "markov_result"
+names(markov_heuristics_attribution)[names(markov_heuristics_attribution) == "total_conversions"] = "markov_result"
 
-#### Calculate ROAS and CPA
-campaign_attribution = 
-  campaign_attribution %>%
-  mutate(chanel_weight = (markov_result / sum(markov_result)),
-         cost_weight = (total_cost / sum(total_cost)),
-         roas = chanel_weight / cost_weight,
-         optimal_budget = total_cost * roas,
-         CPA = total_cost / markov_result)
+# Save the results for comparison with RWA
+write_csv(markov_heuristics_attribution, "C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\markov_heuristics_attribution.csv") #home
+write_csv(markov_removal_effect, "C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\markov_removal_effect.csv") #home
+
 
 
