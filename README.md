@@ -24,36 +24,62 @@ For the purpose of this repository I've calculated the model on two datasets wit
 Original dataset had a format of cookie level set representing detailed campaign data with structure presented below.
 The preprocessing and creating the model input can be found in *data_process_RWA.R*.
 
-xxxx
+<p align="center">
+  <img src="https://github.com/MatCyt/relative-weight-analysis/blob/master/img/original_dataset_structure.png"
+       width="670" height="120">
 
-First one was a cookie-level dataset representing the overal exposure of each user to different channels and total amount of user conversions. Second one
-on much higher level represented a conversion and impression aggregation on daily level. 
+First one was a cookie-level dataset representing the overal exposure of each user to different channels and total amount of user conversions. 
 
-xxxx
+<p align="center">
+  <img src="https://github.com/MatCyt/relative-weight-analysis/blob/master/img/cookie_input_structure.png"
+       width="670" height="120">
 
-Both sets represent different information granularity available in everyday marketing analytics work. T
-heir samples can be found in datasets folder.
+Second one on much higher level represented a conversion and impression aggregation on daily level. Both sets represent different information granularity available in everyday marketing analytics work. Their samples can be found in datasets folder.
 
-xxxx
+<p align="center">
+  <img src="https://github.com/MatCyt/relative-weight-analysis/blob/master/img/day_input_structure.png"
+       width="670" height="120">
 
 RWA can be applied in R easily through a great relaimpo package as you can see in the code below. It takes as input a results of linear model and returns a set of characteristics
 including the breakdown of R2 by each of variables. The RWA function can take several different types based on the theoretical background
 behind it. They are all presented in package documentation linked at the end. For simplicity the "lmg" type used in this example is the
 one recommended by the package authors.
 
-xxx code xxx
+``` R
+## run Relative Weight Analysis (RWA) with realaimpo
+
+# Linear Model and RWA on cookie level data
+df_cookie_input = df_cookie[, -1]
+
+model_cookie = lm(conversion ~ ., data = df_cookie_input)
+summary(model_cookie)
+
+rwa_cookie = calc.relimp(model_cookie, type = c("lmg"), rela = T)
+
+
+# Linear Model and RWA on day level data
+df_day_input = df_day[, -1]
+
+model_day = lm(conversion ~ ., data = df_day_input)
+summary(model_day)
+
+rwa_day = calc.relimp(model_day, type = c("lmg"), rela = T)
+ ```
 
 As you can see the difference in data aggregation influence the results of linear model (12% of variance explained for cookie level set compared
 to over 60% in day level aggregation) and final results of performance attributed to each channel:
 
-xxx graph xxx
+<p align="center">
+  <img src="https://github.com/MatCyt/relative-weight-analysis/blob/master/img/compare_aggregation_RWA.png" alt="Aggregation Level"
+       width="480" height="370">
 
 Finally the graph below compares results of actuall attribution on real data (channel weights applied to conversion numbers) between 
 different methods: RWA on daily level, RWA on cookie level, Markov Chain and classic heuristics models (calculated in *markov_chain_comparison.R*).
 Looking at it I am more and more convinced with the final solution ensembling different approaches since contrary to 
 classic ML classification problem there is no easy metric-driven way to answer the question which ones of those is closes to "truth".
 
-xxx graph xxx
+<p align="center">
+  <img src="https://github.com/MatCyt/relative-weight-analysis/blob/master/img/attribution_methods_comparison.png" alt="Attribution Comparison">
 
 
 
