@@ -3,13 +3,7 @@ if (!require("pacman")) install.packages("pacman")
 pacman::p_load(data.table, dplyr, readr, kableExtra)
 
 ## load datasets ----
-
-# home
-df_processed = fread("C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\processed_dataset.csv")
-
-# work
-df_processed = fread("C:\\Users\\mateusz.cytrowski\\Desktop\\MediaProject\\processed_dataset.csv")
-
+df_processed = fread("../processed_dataset.csv")
 
 
 ### Preprocess dataset for RWA format ----
@@ -74,24 +68,15 @@ kable(df_day_structure) %>%
   kable_styling(bootstrap_options = c("striped"), full_width = F) %>%
   row_spec(0, align = "center")
 
+
 ## Save the sample (cookie only due to size) ----
 df_cookie_sample = head(df_processed, 50000)
 
-# home
-write_csv(df_cookie_sample, "C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\df_cookie_sample.csv")
-
-# work
-write_csv(df_cookie_sample, "C:\\Users\\mateusz.cytrowski\\Desktop\\MediaProject\\df_cookie_sample.csv")
-
+write_csv(df_cookie_sample, "../df_cookie_sample.csv")
 
 ## Save the files ----
 
-# home - cookie
-write_csv(df_cookie, "C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\df_cookie.csv")
-# work - cookie
-write_csv(df_cookie, "C:\\Users\\mateusz.cytrowski\\Desktop\\MediaProject\\df_cookie.csv")
-
-# home - day
-write_csv(df_day, "C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\df_day.csv")
-# work - day
-write_csv(df_day, "C:\\Users\\mateusz.cytrowski\\Desktop\\MediaProject\\df_day.csv")
+# cookie level aggregation
+write_csv(df_cookie, "../df_cookie.csv")
+# day level aggregation
+write_csv(df_day, "../df_day.csv")

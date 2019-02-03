@@ -2,8 +2,10 @@
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(data.table, dplyr, readr, ChannelAttribution)
 
+
 # load dataset
 df_processed = fread("../processed_dataset.csv")
+
 
 ## Prepare the files - Split Paths ----
 df_split = df_processed %>%
@@ -23,6 +25,7 @@ df_paths = df_split %>%
   ungroup() %>% 
   mutate(null_conversion = ifelse(total_conversions == 1, 0, 1)) # adding information about path that have not led to conversion
 
+
 ## Markov Chain and Heuristic Models ----
 markov_attribution <- markov_model(df_paths,
                                    var_path = "path",
@@ -38,7 +41,6 @@ heuristic_attribution <- heuristic_models(df_paths,
                                           var_conv = "total_conversions")
 
 
-
 ## Prepare final joint dataset ----
 
 # Join attribution results and markov removal effect 
@@ -48,6 +50,7 @@ markov_removal_effect = markov_attribution$removal_effects
 
 # Change the name of markov results column
 names(markov_heuristics_attribution)[names(markov_heuristics_attribution) == "total_conversions"] = "markov_result"
+
 
 # Save the results for comparison with RWA
 write_csv(markov_heuristics_attribution, "../markov_heuristics_attribution.csv")
