@@ -38,7 +38,7 @@ Second one on much higher level represented a conversion and impression aggregat
 
 <p align="center">
   <img src="https://github.com/MatCyt/relative-weight-analysis/blob/master/img/day_input_structure.png"
-       width="670" height="120">
+       width="620" height="110">
 
 RWA can be applied in R easily through a great relaimpo package as you can see in the code below. It takes as input a results of linear model and returns a set of characteristics
 including the breakdown of R2 by each of variables. The RWA function can take several different types based on the theoretical background
