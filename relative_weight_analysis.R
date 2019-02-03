@@ -1,26 +1,20 @@
 # libraries
-library(relaimpo)
-library(yhat)
-library(dplyr)
-library(data.table)
-library(ggplot2)
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(data.table, dplyr, ggplot2, relaimpo)
+
 
 ## load data ----
 
-# home - cookie
-df_cookie = fread("C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\df_cookie.csv")
-# work - cookie
-df_cookie = fread("C:\\Users\\mateusz.cytrowski\\Desktop\\MediaProject\\df_cookie.csv")
+# cookie aggregation
+df_cookie = fread("../df_cookie.csv")
 
-# home - day
-df_day = fread("C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\df_day.csv")
-# work - day
-df_day = fread("C:\\Users\\mateusz.cytrowski\\Desktop\\MediaProject\\df_day.csv")
+# day aggregation
+df_day = fread("../df_day.csv")
 
-# Markov - Home
-markov_heuristics_attribution = fread("C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\markov_heuristics_attribution.csv")
+# Markov results for comparison - generated through markov_comparison.R
+markov_heuristics_attribution = fread("../markov_heuristics_attribution.csv")
+markov_removal_effect = fread("../markov_removal_effect.csv")
 
-markov_removal_effect = fread("C:\\Users\\matcyt\\Desktop\\MarketingAttribution_Datasets\\markov_removal_effect.csv")
 
 
 ## run Relative Weight Analysis (RWA) with realaimpo
@@ -33,6 +27,7 @@ summary(model_cookie)
 
 rwa_cookie = calc.relimp(model_cookie, type = c("lmg"), rela = T)
 
+
 # Linear Model and RWA on day level data
 df_day_input = df_day[, -1]
 
@@ -41,16 +36,17 @@ summary(model_day)
 
 rwa_day = calc.relimp(model_day, type = c("lmg"), rela = T)
 
-## compare different RWA relaimpo versions
+
+## compare different RWA relaimpo versions ----
 cookie_lmg = as.data.frame(rwa_cookie@lmg) %>%
   mutate(channel = row.names(as.data.frame(rwa_cookie@lmg)))
 day_lmg = as.data.frame(rwa_day@lmg) %>%
   mutate(channel = row.names(as.data.frame(rwa_day@lmg)))
 
-rwa_coefficients = cookie_lmg %>%
+rwa_coefficients = cookie_lmg %>% # join cookie and day results
   full_join(day_lmg)
   
-rwa_coef_melted = melt(rwa_coefficients, id.vars = ("channel"))
+rwa_coef_melted = melt(rwa_coefficients, id.vars = ("channel")) # melt data for graph purpose
 
 g_compared_aggregation = ggplot(rwa_coef_melted, aes(x = channel, y = value, fill = variable)) + 
   geom_bar(stat = "identity", width = 0.5, position = position_dodge(width = 0.7))  +
@@ -66,13 +62,17 @@ g_compared_aggregation = ggplot(rwa_coef_melted, aes(x = channel, y = value, fil
 
 g_compared_aggregation
 
+
 ## RWA-based attribution
 conversions_sum = sum(df_processed$conversion)
 
+# create attribution results - multiply conversion values by attribution results
 rwa_attribution = rwa_coefficients %>%
   mutate(rwa_day_result = rwa_day@lmg * conversions_sum,
          rwa_cookie_result = rwa_cookie@lmg * conversions_sum) %>%
-  select(channel, rwa_cookie_result, rwa_day_result)
+  dplyr::select(channel, rwa_cookie_result, rwa_day_result)
+
+
 
 ## Compare RWA with Markov Chain
 weight_comparison = rwa_coefficients %>%

@@ -1,8 +1,6 @@
 # libraries
-library(dplyr)
-library(data.table)
-library(kableExtra)
-library(readr)
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(data.table, dplyr, readr, kableExtra)
 
 ## load datasets ----
 
@@ -65,8 +63,8 @@ df_day = df_input1_day %>%
 
 
 ## Print output structure ----
-df_cookie_structure = head(df_cookie, 4)
-df_day_structure = head(df_day, 4)
+df_cookie_structure = head(df_cookie, 3)
+df_day_structure = head(df_day, 3)
 
 kable(df_cookie_structure) %>%
   kable_styling(bootstrap_options = c("striped"), full_width = F) %>%
