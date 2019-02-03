@@ -71,7 +71,7 @@ to over 60% in day level aggregation) and final results of performance attribute
 
 <p align="center">
   <img src="https://github.com/MatCyt/relative-weight-analysis/blob/master/img/compare_aggregation_RWA.png" alt="Aggregation Level"
-       width="480" height="370">
+       width="480" height="360">
 
 Finally the graph below compares results of actuall attribution on real data (channel weights applied to conversion numbers) between 
 different methods: RWA on daily level, RWA on cookie level, Markov Chain and classic heuristics models (calculated in *markov_chain_comparison.R*).
