@@ -1,4 +1,4 @@
-# Marketing-Attribution_Markov-Chain
+# Marketing-Attribution_Relative-Weight-Analysis
 
 Applying Relative Weight Analysis to marketing attribution problem in R.
 
